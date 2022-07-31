@@ -12,4 +12,12 @@ module.exports = (app)=>{
      */
 
     app.post("/crm/api/v1/auth/signup", authController.signUp);
+
+    /**
+     * Here we define the api for signIn
+     * 
+     * POST crm/api/v1/auth/signIn => auth controller signIn method is invoke..
+     */
+
+    app.post("/crm/api/v1/auth/signIn",authController.signIn);
 }

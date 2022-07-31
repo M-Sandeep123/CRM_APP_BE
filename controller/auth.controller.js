@@ -17,6 +17,8 @@ const user = require("../models/user.model");
 
 //For the Encryption of the password we the module "bcryptjs"
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const authConfig = require("../configs/auth.config");
 
 exports.signUp = async(req,res)=>{
     /**
@@ -75,5 +77,73 @@ exports.signUp = async(req,res)=>{
 }
 
 /**
- * this is for login api...
+ * controller code for the login/signIn..
+ * 
  */
+exports.signIn = async (req, res)=>{
+
+    try{
+    /**
+     * read the userId and password for request body
+     */
+    const passUserId = req.body.userId;
+    const password = req.body.password;
+
+    /**
+     * Ensure the userId is valid
+     */
+    const savedUser = await user.findOne({userId : passUserId});
+    if(!savedUser){
+        res.status(401).send({
+            message : "The User Id is not correct"
+        });
+    }
+
+    /**
+     * Ensure the password passed is valid
+     * 
+     * we got plain text password from req body (in db we encrypt password)
+     */
+    const validPassword = bcrypt.compareSync(password,savedUser.password);
+    if(!validPassword){
+        res.status(401).send({
+            message : "Password is in correct"
+        });
+    }
+
+    /**
+     * check the user is valid or approved state
+     */
+    if(savedUser.userStatus != "APPROVED"){
+        return res.status(403).send({
+            message : "User is not APPROVED for login"
+        })
+    }
+
+    /**
+     * need to generate the access token (JWT based token)
+     */
+    const token = jwt.sign({
+        id : savedUser.userId
+    },authConfig.secert,{
+        expiresIn : 600
+    });
+
+    /**
+     * send the response back to the user
+     */
+    res.status(200).send({
+        name : savedUser.name,
+        userId : savedUser.userId,
+        email : savedUser.email,
+        userStatus : savedUser.userStatus,
+        userType : savedUser.userType,
+        accessToken : token
+    });
+}catch(err){
+    console.log("Error while login:",err.message);
+    res.status(500).send({
+        message : "Some Internal server Error"
+    });
+}
+}
