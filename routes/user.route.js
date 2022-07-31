@@ -11,4 +11,12 @@ module.exports = (app)=>{
      */
 
     app.get("/crm/api/v1/users",[auth.verifyToken,auth.isAdmin],userController.findAll);
+
+    /**
+     * EndPoint for user updating
+     * 
+     * PUT crm/api/v1/user/id ==> user Controller , update method is invoked
+     */
+
+    app.put("/crm/api/v1/users/:id",[auth.verifyToken,auth.isAdminOrOwner],userController.update);
 }

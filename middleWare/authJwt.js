@@ -54,7 +54,32 @@ const isAdmin =async (req,res,next)=>{
     }
 }
 
+/**
+ * MiddleWare to check admin or owener of the account
+ */
+
+const isAdminOrOwner = async (req,res,next)=>{
+    const user =await userModel.findOne({userId : req.userId});
+
+    if(user.userType == "ADMIN" || user.userId == req.params.id){
+
+        if(req.body.userStatus && user.userType != 'ADMIN'){
+            return res.status(403).send({
+                message : "Only ADMIN is allowed to change the status"
+            });
+        }
+        
+        next()
+    }else{
+        return res.status(403).send({
+            message : "Only admin or owner of the resource allowed to update"
+        });
+    }
+}
+
 module.exports = {
     verifyToken : verifyToken,
-    isAdmin : isAdmin
+    isAdmin : isAdmin,
+    isAdminOrOwner : isAdminOrOwner
+    
 }
