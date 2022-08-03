@@ -33,7 +33,7 @@
      /**
       * when server I should clear the Db data and initilize the db
       */
-    init();
+    //init();
 
  });
 

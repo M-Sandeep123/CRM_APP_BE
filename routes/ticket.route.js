@@ -12,4 +12,11 @@ module.exports = (app)=>{
      * POST /crm/api/v1/tickets
      */
     app.post("/crm/api/v1/tickets",[auth.verifyToken,ticketValidator.validateTicketReqBody],ticketController.createTicket);
+
+    /**
+     * Routes for the fecthing the tickets
+     * 
+     * GET /crm/api/v1/tickets
+     */
+    app.get("/crm/api/v1/tickets",[auth.verifyToken],ticketController.getTickets);
 }

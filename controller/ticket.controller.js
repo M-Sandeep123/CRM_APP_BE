@@ -60,3 +60,41 @@ exports.createTicket = async (req,res)=>{
         })
     }
 }
+
+/**
+ * method to fetch all the users
+ */
+
+exports.getTickets = async (req,res)=>{
+    try {
+        /**
+        * First fetch the details of the user who is making the call
+        */
+        const userId = req.userId;
+        const callingUserObj = await userModel.findOne({ userId: userId });
+
+        const queryObj = {};
+        /**
+         * Then make the query based on the type of user
+         * 
+         */
+        if (callingUserObj.userType == "CUSTOMER") {
+            queryObj.reporter = req.userId;
+        } else if (callingUserObj.userType == "ENGINEER") {
+            queryObj.$or = [{ reporter: req.userId }, { assignee: req.userId }];
+            console.log(queryObj);
+        }
+
+        /**
+         * Finally return the tickets
+         */
+        const tickets = await ticketModel.find(queryObj);
+        return res.status(200).send(tickets);
+
+    } catch (err) {
+        console.log("Error while fetching the ticket data", err.message);
+        res.status(500).send({
+            message: "Internal error for fetching the tickets data"
+        });
+    }
+}
