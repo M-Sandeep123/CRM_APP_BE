@@ -15,7 +15,7 @@
 
 const user = require("../models/user.model");
 
-//For the Encryption of the password we the module "bcryptjs"
+//For the Encryption of the password we use the module "bcryptjs"
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const authConfig = require("../configs/auth.config");

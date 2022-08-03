@@ -61,6 +61,7 @@
   */
  require("./routes/auth.route")(app);
  require("./routes/user.route")(app);
+ require("./routes/ticket.route")(app);
  
  app.listen(serverConfig.PORT , () => {
      console.log("Server started on the port no : ",serverConfig.PORT );

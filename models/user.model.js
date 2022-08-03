@@ -7,32 +7,32 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     name : {
         type : String,
-        require : true
+        required : true
     },
     userId : {
         type : String,
         unique : true,
-        require : true
+        required : true
     },
     email : {
         type : String,
         unique : true,
-        require : true,
+        required : true,
         minLength : 15,
         lowercase : true
     },
     password : {
         type : String,
-        require : true
+        required : true
     },
     userType : {
         type : String,
-        require : true,
+        required : true,
         default : "CUSTOMER"
     },
     userStatus : {
         type : String,
-        require : true,
+        required : true,
         default : "APPROVED"
     },
     createdAt : {
@@ -47,6 +47,15 @@ const userSchema = new mongoose.Schema({
         default :()=>{
             return  Date.now();
         },
+    },
+    ticketsCreated : {
+        type : [mongoose.SchemaTypes.ObjectId],
+        ref : "Ticket"
+
+    },
+    ticketsAssigned : {
+        type : [mongoose.SchemaTypes.ObjectId],
+        ref : "Ticket"
     }
 });
 

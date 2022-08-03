@@ -1,5 +1,5 @@
 /**
- * this file have the logic of routes the request of defferent Controllers
+ * this file have the logic of routes the request of different Controllers
  */
 
 const authController = require("../controller/auth.controller");
